@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SolutionName.Model;
 
 namespace SolutionName.DataLayer
 {
-    public class SalesContext : DbContext 
+    public partial class SalesContext : DbContext
     {
-        public SalesContext() : base ("DefaultConnection")
+        public SalesContext()
+            : base("name=DefaultConnection")
         {
-            
         }
 
-        public DbSet<SalesOrder> SalesOrders { get; set; }
+        public virtual DbSet<SalesOrder> SalesOrders { get; set; }
 
-        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Configurations.Add(new SalesOrderConfiguration());
-        //    //base.OnModelCreating(modelBuilder);
-        //}
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+        }
     }
 }

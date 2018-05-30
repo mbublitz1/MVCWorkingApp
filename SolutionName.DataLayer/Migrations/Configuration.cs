@@ -21,13 +21,12 @@ namespace SolutionName.DataLayer.Migrations
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-
             context.SalesOrders.AddOrUpdate(
-                so => so.CustomerName, 
+                so => so.CustomerName,
                 new SalesOrder { CustomerName = "Adam", PONumber = "9876" },
                 new SalesOrder { CustomerName = "Michael" },
                 new SalesOrder { CustomerName = "David", PONumber = "Acme 9" }
-                );
+            );
         }
     }
 }

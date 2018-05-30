@@ -1,15 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SolutionName.Model
 {
-    public class SalesOrder
+
+    public partial class SalesOrder
     {
         public int SalesOrderId { get; set; }
+
+        [Required]
+        [StringLength(30)]
         public string CustomerName { get; set; }
+
+        [StringLength(10)]
         public string PONumber { get; set; }
     }
 }

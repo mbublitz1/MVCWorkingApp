@@ -1,34 +1,48 @@
-﻿@model SolutionName.Model.SalesOrder
-
+﻿@model SolutionName.Web.ViewModels.SalesOrderViewModel
+@*library that contains the default JS serializer*@
+@using System.Web.Script.Serialization
+@using System.Activities.Expressions
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Sales Order Details";
 }
 
-<h2>Details</h2>
+@{
+    //Serialize the model data
+    string data = new JavaScriptSerializer().Serialize(Model);
+}
+
+
+@section scripts
+{
+    @*Include script files*@
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/salesorderviewmodel.js"></script>
+    <script type="text/javascript">
+        //use the serialized data to instantiate the view model, using the Raw helper will 
+        //prevent the data from being further encoded
+        var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
+        // now that the client side viewmodel avaialble to the view and the data bound attributes bound to display
+        // those two attributes, the line below brings the two togeather
+        ko.applyBindings(salesOrderViewModel);
+    </script>
+}
+
+<h2>@ViewBag.Title</h2>
+@*this will bind the paragraphs tags text attribute to the viewmodels MessageToClient Property*@
+<p data-bind="text: MessageToClient"></p>
 
 <div>
-    <h4>SalesOrder</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CustomerName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CustomerName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PONumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PONumber)
-        </dd>
-
-    </dl>
+    <div>
+        <label>Customer Name:</label>
+        <span data-bind="text: CustomerName"></span>
+    </div>
+    <div>
+        <label>P.O. Number</label>
+        <span data-bind="text: PONumber"></span>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SalesOrderId }) |
+
     @Html.ActionLink("Back to List", "Index")
 </p>
