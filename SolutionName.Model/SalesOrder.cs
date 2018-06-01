@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SolutionName.Model
 {
 
-    public partial class SalesOrder
+    public partial class SalesOrder : IObjectWithState
     {
         public int SalesOrderId { get; set; }
 
@@ -16,5 +16,7 @@ namespace SolutionName.Model
 
         [StringLength(10)]
         public string PONumber { get; set; }
+        [NotMapped]
+        public ObjectState ObjectState { get; set; }
     }
 }

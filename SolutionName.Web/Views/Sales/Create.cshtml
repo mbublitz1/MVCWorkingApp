@@ -35,11 +35,11 @@
 <div>
     <div>
         <label>Customer Name:</label>
-        <input data-bind="value: CustomerName" />
+        <input data-bind="value: CustomerName, event: {change: flagSalesOrderAsEdited}" />
     </div>
     <div>
         <label>P.O. Number</label>
-        <input data-bind="value: PONumber" />
+        <input data-bind="value: PONumber, event: {change: flagSalesOrderAsEdited}" />
     </div>
 </div>
 <p><button data-bind="click: save">Save</button></p>

@@ -1,50 +1,50 @@
-﻿@model SolutionName.Model.SalesOrder
+﻿@model SolutionName.Web.ViewModels.SalesOrderViewModel
+@*library that contains the default JS serializer*@
+@using System.Web.Script.Serialization
+@using System.Activities.Expressions
+@{
+    ViewBag.Title = "Edit Sales Order";
+}
 
 @{
-    ViewBag.Title = "Edit";
+    //Serialize the model data
+    string data = new JavaScriptSerializer().Serialize(Model);
 }
 
-<h2>Edit</h2>
 
-
-@using (Html.BeginForm())
+@section scripts
 {
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>SalesOrder</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SalesOrderId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PONumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PONumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PONumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+    @*Include script files*@
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/salesorderviewmodel.js"></script>
+    <script type="text/javascript">
+        //use the serialized data to instantiate the view model, using the Raw helper will
+        //prevent the data from being further encoded
+        var salesOrderViewModel = new SalesOrderViewModel(@Html.Raw(data));
+        // now that the client side viewmodel avaialble to the view and the data bound attributes bound to display
+        // those two attributes, the line below brings the two together
+        ko.applyBindings(salesOrderViewModel);
+    </script>
 }
+
+<h2>@ViewBag.Title</h2>
+@*this will bind the paragraphs tags text attribute to the viewmodels MessageToClient Property*@
+<p data-bind="text: MessageToClient"></p>
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <div>
+        <label>Customer Name:</label>
+        @*event: {change: flagSalesOrderAsEdited} binds it to the function in JS script file*@
+        <input data-bind="value: CustomerName, event: {change: flagSalesOrderAsEdited}" />
+    </div>
+    <div>
+        <label>P.O. Number</label>
+        <input data-bind="value: PONumber, event: {change: flagSalesOrderAsEdited}" />
+    </div>
 </div>
+<p><button data-bind="click: save">Save</button></p>
+<p>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @Html.ActionLink("Back to List", "Index")
+</p>

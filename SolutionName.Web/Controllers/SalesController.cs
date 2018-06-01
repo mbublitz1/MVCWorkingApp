@@ -54,6 +54,7 @@ namespace SolutionName.Web.Controllers
         public ActionResult Create()
         {
             var viewModel = new SalesOrderViewModel();
+            viewModel.ObjectState = ObjectState.Added;
             return View(viewModel);
         }
 
@@ -69,7 +70,17 @@ namespace SolutionName.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(salesOrder);
+
+            var viewModel = new SalesOrderViewModel
+            {
+                SalesOrderId = salesOrder.SalesOrderId,
+                CustomerName = salesOrder.CustomerName,
+                PONumber = salesOrder.PONumber,
+                MessageToClient = string.Format("The original value of the Customer Name is {0}", salesOrder.CustomerName),
+                ObjectState = ObjectState.Unchanged
+            };
+
+            return View(viewModel);
         }
 
         public ActionResult Delete(int? id)
@@ -102,6 +113,7 @@ namespace SolutionName.Web.Controllers
             {
                 CustomerName = salesOrderViewModel.CustomerName,
                 PONumber = salesOrderViewModel.PONumber,
+                ObjectState = salesOrderViewModel.ObjectState
             };
 
             _salesContext.SalesOrders.Add(salesOrder);

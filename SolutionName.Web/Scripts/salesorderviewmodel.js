@@ -1,5 +1,12 @@
-﻿SalesOrderViewModel = function (data) {
-    //this gets a refrence to 
+﻿var ObjectState = {
+    Unchanged: 0,
+    Added: 1,
+    Modified: 2,
+    Deleted: 3
+};
+
+SalesOrderViewModel = function (data) {
+    //this gets a refrence to the page
     var self = this;
     // This uses knockout and passes data which is passed to this function
     // empty second argument
@@ -25,7 +32,15 @@
                 }
             }
         });
+    },
 
+        self.flagSalesOrderAsEdited = function () {
+            if (self.ObjectState() !== ObjectState.Added) {
 
-    }
+                //Remember that knockout creates observables which are functions not properties
+                //so setting their values is done by passing the values to the function
+                self.ObjectState(ObjectState.Modified);
+            }
+            return true;
+        }
 }
