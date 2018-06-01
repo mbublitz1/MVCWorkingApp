@@ -30,10 +30,15 @@ SalesOrderViewModel = function (data) {
                 if (data.salesOrderViewModel != null) {
                     ko.mapping.fromJS(data.salesOrderViewModel, {}, self);
                 }
+
+                if (data.newLocation != null) {
+                    window.location = data.newLocation;
+                }
+
             }
         });
     },
-
+        //This function will need to be bound to the input elements in the Create and Edit Views
         self.flagSalesOrderAsEdited = function () {
             if (self.ObjectState() !== ObjectState.Added) {
 
@@ -41,6 +46,8 @@ SalesOrderViewModel = function (data) {
                 //so setting their values is done by passing the values to the function
                 self.ObjectState(ObjectState.Modified);
             }
+            // To tell knockout you want to allow the default action on the control that raised this event you
+            // need to return true
             return true;
         }
 }
