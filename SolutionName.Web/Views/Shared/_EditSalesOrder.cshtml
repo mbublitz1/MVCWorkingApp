@@ -3,18 +3,18 @@
 <p data-bind="text: MessageToClient"></p>
 
 <div>
-    <div>
-        <label>Customer Name:</label>
+    <div class="form-group">
+        <label for="CustomerName" class="control-label">Customer Name:</label>
         @*event: {change: flagSalesOrderAsEdited} binds it to the function in JS script file*@
-        <input data-bind="value: CustomerName, event: {change: flagSalesOrderAsEdited}" />
+        <input name="CustomerName" id="CustomerName" class="form-control" data-bind="value: CustomerName, event: {change: flagSalesOrderAsEdited}" />
     </div>
-    <div>
-        <label>P.O. Number</label>
-        <input data-bind="value: PONumber, event: {change: flagSalesOrderAsEdited}" />
+    <div class="form-group">
+        <label for="PONumber" class="control-label">P.O. Number</label>
+        <input name="PONumber" id="PONumber" class="form-control" data-bind="value: PONumber, event: {change: flagSalesOrderAsEdited}" />
     </div>
 </div>
-<p><button data-bind="click: save">Save</button></p>
+<p><button data-bind="click: save" class="btn btn-primary">Save</button></p>
 <p>
 
-    @Html.ActionLink("Back to List", "Index")
+    <a href="/" class="btn btn-default btn-sm">&laquo; Back to list</a>
 </p>
