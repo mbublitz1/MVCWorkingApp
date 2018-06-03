@@ -1,0 +1,18 @@
+﻿<h2>@ViewBag.Title</h2>
+@*this will bind the paragraphs tags text attribute to the viewmodels MessageToClient Property*@
+<p data-bind="text: MessageToClient"></p>
+
+<div>
+    <div>
+        <label>Customer Name:</label>
+        <span data-bind="text: CustomerName"></span>
+    </div>
+    <div>
+        <label>P.O. Number</label>
+        <span data-bind="text: PONumber"></span>
+    </div>
+</div>
+<p>
+
+    @Html.ActionLink("Back to List", "Index")
+</p>
