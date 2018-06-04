@@ -14,9 +14,12 @@ namespace SolutionName.DataLayer
         }
 
         public virtual DbSet<SalesOrder> SalesOrders { get; set; }
+        public virtual DbSet<SalesOrderItem> SalesOrderItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Configurations.Add(new SalesOrderConfiguration());
+            modelBuilder.Configurations.Add(new SalesOrderItemConfiguration());
         }
     }
 }

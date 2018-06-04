@@ -91,7 +91,6 @@ namespace SolutionName.Web.Controllers
             SalesOrderViewModel viewModel = SalesOrderHelper.CreateSalesOrderViewModelFromSalesOrder(salesOrder);
 
             viewModel.MessageToClient = string.Format("You are about to delete this sales order");
-            viewModel.ObjectState = ObjectState.Deleted;
 
             return View(viewModel);
         }
@@ -116,8 +115,9 @@ namespace SolutionName.Web.Controllers
             _salesContext.SalesOrders.Attach(salesOrder);
             //Then you want to tell the change tracker to set the state that was returned from the helper method
             //created in the SolutionName.Model
-            _salesContext.ChangeTracker.Entries<IObjectWithState>().Single().State =
-                Helpers.ConvertState(salesOrder.ObjectState);
+            //_salesContext.ChangeTracker.Entries<IObjectWithState>().Single().State =
+            //    Helpers.ConvertState(salesOrder.ObjectState);
+            _salesContext.ApplyStateChanges();
             _salesContext.SaveChanges();
 
             //Since when an item is deleted we don't want to return a aview the
@@ -131,13 +131,14 @@ namespace SolutionName.Web.Controllers
             }
 
 
-            salesOrderViewModel.MessageToClient = SalesOrderHelper.GetMessageToClient(salesOrderViewModel.ObjectState,
+             string messageToClient = SalesOrderHelper.GetMessageToClient(salesOrderViewModel.ObjectState,
                 salesOrderViewModel.CustomerName);
 
             //If a record is inserted the context is synced with the ID but that is never communicated back to the client
             //so the SalesOrderId needs to be set with the value returned from the DB
-            salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
-            salesOrderViewModel.ObjectState = ObjectState.Unchanged;
+            //salesOrderViewModel.SalesOrderId = salesOrder.SalesOrderId;
+            salesOrderViewModel = ViewModels.SalesOrderHelper.CreateSalesOrderViewModelFromSalesOrder(salesOrder);
+            salesOrderViewModel.MessageToClient = messageToClient;
 
             //to make the Json object as flexible enough for all our needs we will send back an annoymous object
             //that contains whatever we need to send to the client and then let the client insepct the contents to 

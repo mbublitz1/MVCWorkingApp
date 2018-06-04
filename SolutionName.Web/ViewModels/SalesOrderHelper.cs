@@ -15,8 +15,26 @@ namespace SolutionName.Web.ViewModels
             {
                 SalesOrderId = salesOrder.SalesOrderId,
                 CustomerName = salesOrder.CustomerName,
-                PONumber = salesOrder.PONumber
+                PONumber = salesOrder.PONumber,
+                ObjectState = ObjectState.Unchanged
             };
+
+            foreach (SalesOrderItem salesOrderItem in salesOrder.SalesOrderItems)
+            {
+                SalesOrderItemViewModel salesOrderItemViewModel = new SalesOrderItemViewModel
+                {
+                    SalesOrderItemId = salesOrderItem.SalesOrderItemId,
+                    ProductCode = salesOrderItem.ProductCode,
+                    Quantity = salesOrderItem.Quantity,
+                    UnitPrice = salesOrderItem.UnitPrice,
+                    ObjectState = salesOrderItem.ObjectState,
+                    SalesOrderId = salesOrderItem.SalesOrderId
+
+                };
+
+                salesOrderViewModel.SalesOrderItems.Add(salesOrderItemViewModel);
+
+            }
 
             return salesOrderViewModel;
         }
@@ -29,6 +47,20 @@ namespace SolutionName.Web.ViewModels
                 CustomerName = salesOrderViewModel.CustomerName,
                 PONumber = salesOrderViewModel.PONumber
             };
+
+            foreach (SalesOrderItemViewModel salesOrderItemViewModel in salesOrderViewModel.SalesOrderItems)
+            {
+                SalesOrderItem salesOrderItem = new SalesOrderItem
+                {
+                    ProductCode = salesOrderItemViewModel.ProductCode,
+                    Quantity = salesOrderItemViewModel.Quantity,
+                    UnitPrice = salesOrderItemViewModel.UnitPrice,
+                    ObjectState = salesOrderItemViewModel.ObjectState,
+                    SalesOrderId = salesOrderItemViewModel.SalesOrderId
+                };
+
+                salesOrder.SalesOrderItems.Add(salesOrderItem);
+            }
 
             return salesOrder;
         }
