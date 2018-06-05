@@ -4,6 +4,7 @@
 @using System.Activities.Expressions
 @{
     ViewBag.Title = "Create Sales Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @{
@@ -11,6 +12,7 @@
     string data = new JavaScriptSerializer().Serialize(Model);
 }
 
+@Html.Partial("_EditSalesOrder")
 
 @section scripts
 {
@@ -28,4 +30,3 @@
     </script>
 }
 
-@Html.Partial("_EditSalesOrder")

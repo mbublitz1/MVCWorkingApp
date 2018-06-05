@@ -11,6 +11,7 @@ namespace SolutionName.Web.ViewModels
         public SalesOrderViewModel()
         {
             SalesOrderItems = new List<SalesOrderItemViewModel>();
+            SalesOrderItemsToDelete = new List<int>();
         }
 
         public int SalesOrderId { get; set; }
@@ -24,5 +25,8 @@ namespace SolutionName.Web.ViewModels
         public ObjectState ObjectState { get; set; }
 
         public List<SalesOrderItemViewModel> SalesOrderItems { get; set; }
+
+        //Used to track which items are deleted
+        public List<int> SalesOrderItemsToDelete { get; set; }
     }
 }

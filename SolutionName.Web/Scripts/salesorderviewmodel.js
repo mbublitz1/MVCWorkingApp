@@ -18,12 +18,26 @@ var salesOrderItemMapping = {
 
 //View model declaration for SalesOrderItem
 SalesOrderItemViewModel = function (data) {
+    //this is a refrence to prototype object (model class constructor)
     var self = this;
     ko.mapping.fromJS(data, salesOrderItemMapping, self);
+
+    self.flagSalesOrderItemAsEdited = function () {
+        if (self.objectState() != ObjectState.Added) {
+            self.ObjectState(ObjectState.Added);
+        }
+        return true;
+    },
+    //Adds a calculated column
+        self.ExtendedPrice = ko.computed(function () {
+            return (self.Quantity() * self.UnitPrice()).toFixed(2);
+        });
 };
 
-SalesOrderViewModel = function (data) {
-    //this gets a refrence to the page
+
+//View model declaration for SalesOrder
+SalesOrderViewModel = function(data) {
+    //this is a refrence to prototype object (model class constructor)
     var self = this;
     // This uses knockout and passes data which is passed to this function
     // empty second argument
@@ -69,7 +83,40 @@ SalesOrderViewModel = function (data) {
         },
         self.addSalesOrderItem = function() {
             var salesOrderItem =
-                new SalesOrderItemViewModel({ SalesOrderItemId: 0, ProductCode: "", Quantity: 1, UnitPrice: 0, ObjectState: ObjectState.Added });
+                new SalesOrderItemViewModel({
+                    SalesOrderItemId: 0,
+                    ProductCode: "",
+                    Quantity: 1,
+                    UnitPrice: 0,
+                    ObjectState: ObjectState.Added
+                });
             self.SalesOrderItems.push(salesOrderItem);
+        },
+        self.Total = ko.computed(function() {
+            var total = 0;
+            ko.utils.arrayForEach(self.SalesOrderItems(),
+                function(salesOrderItem) {
+                    total += parseFloat(salesOrderItem.ExtendedPrice());
+                });
+
+            return total.toFixed(2);
+        }),
+        self.deleteSalesOrderItem = function(salesOrderItem) {
+            self.SalesOrderItems.remove(this);
+
+            if (salesOrderItem.SalesOrderItemId() > 0 &&
+                self.SalesOrderItemsToDelete.indexOf(salesOrderItem.SalesOrderItemId()) == -1)
+                self.SalesOrderItemsToDelete.push(salesOrderItem.SalesOrderItemId());
         };
-}
+};
+
+$("form").validate({
+    submitHandler: function() {
+        salesOrderViewModel.save();
+    },
+    rules: {
+        CustomerName: {
+            required: true
+        }
+    }
+});

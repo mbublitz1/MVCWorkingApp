@@ -89,8 +89,9 @@ namespace SolutionName.Web.Controllers
             }
 
             SalesOrderViewModel viewModel = SalesOrderHelper.CreateSalesOrderViewModelFromSalesOrder(salesOrder);
-
             viewModel.MessageToClient = string.Format("You are about to delete this sales order");
+            //Because in the helper method object state is set to unchanged, it needs to be set to deleted here
+            viewModel.ObjectState = ObjectState.Deleted;
 
             return View(viewModel);
         }
@@ -113,6 +114,31 @@ namespace SolutionName.Web.Controllers
 
             //instead of hard coding salesOrder as an add, attach it instead
             _salesContext.SalesOrders.Attach(salesOrder);
+
+            //Check to see if objectstate for the salesorder is delete
+            if (salesOrder.ObjectState == ObjectState.Deleted)
+            {
+                //Loop through all the salesorderitems in the view model and set their object state to deleted
+                foreach (SalesOrderItemViewModel salesOrderItemViewModel in salesOrderViewModel.SalesOrderItems)
+                {
+                    SalesOrderItem salesOrderItem =
+                        _salesContext.SalesOrderItems.Find(salesOrderItemViewModel.SalesOrderItemId);
+                    if (salesOrderItem != null)
+                        salesOrderItem.ObjectState = ObjectState.Deleted;
+                }
+            }
+            else
+            {
+                //This will loop through the SalesOrderItems marked for deleting on the client,
+                //find the corresponding record in the context and set it to be deleted in EF
+                foreach (int salesOrderItemId in salesOrderViewModel.SalesOrderItemsToDelete)
+                {
+                    SalesOrderItem salesOrderItem = _salesContext.SalesOrderItems.Find(salesOrderItemId);
+                    if (salesOrderItem != null)
+                        salesOrderItem.ObjectState = ObjectState.Deleted;
+                }
+            }
+
             //Then you want to tell the change tracker to set the state that was returned from the helper method
             //created in the SolutionName.Model
             //_salesContext.ChangeTracker.Entries<IObjectWithState>().Single().State =
@@ -131,8 +157,8 @@ namespace SolutionName.Web.Controllers
             }
 
 
-             string messageToClient = SalesOrderHelper.GetMessageToClient(salesOrderViewModel.ObjectState,
-                salesOrderViewModel.CustomerName);
+            string messageToClient = SalesOrderHelper.GetMessageToClient(salesOrderViewModel.ObjectState,
+               salesOrderViewModel.CustomerName);
 
             //If a record is inserted the context is synced with the ID but that is never communicated back to the client
             //so the SalesOrderId needs to be set with the value returned from the DB

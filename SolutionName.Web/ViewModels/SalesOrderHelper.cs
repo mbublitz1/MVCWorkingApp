@@ -48,6 +48,9 @@ namespace SolutionName.Web.ViewModels
                 PONumber = salesOrderViewModel.PONumber
             };
 
+            //Used to set the ID to -1 for child records since entity framework ignores negatives
+            int temporarySalesOrderItemId = -1;
+
             foreach (SalesOrderItemViewModel salesOrderItemViewModel in salesOrderViewModel.SalesOrderItems)
             {
                 SalesOrderItem salesOrderItem = new SalesOrderItem
@@ -58,6 +61,16 @@ namespace SolutionName.Web.ViewModels
                     ObjectState = salesOrderItemViewModel.ObjectState,
                     SalesOrderId = salesOrderItemViewModel.SalesOrderId
                 };
+
+                if (salesOrderItemViewModel.ObjectState != ObjectState.Added)
+                {
+                    salesOrderItem.SalesOrderId = salesOrderItemViewModel.SalesOrderId;
+                }
+                else
+                {
+                    salesOrderItem.SalesOrderId = temporarySalesOrderItemId;
+                    temporarySalesOrderItemId--;
+                }
 
                 salesOrder.SalesOrderItems.Add(salesOrderItem);
             }
