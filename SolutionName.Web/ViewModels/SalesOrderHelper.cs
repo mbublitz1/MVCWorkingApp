@@ -41,11 +41,13 @@ namespace SolutionName.Web.ViewModels
 
         public static SalesOrder CreateSalesOrderFromSalesOrderViewModel(SalesOrderViewModel salesOrderViewModel)
         {
+            //Used to set the ID to -1 for child records since entity framework ignores negatives
             SalesOrder salesOrder = new SalesOrder
             {
                 SalesOrderId = salesOrderViewModel.SalesOrderId,
                 CustomerName = salesOrderViewModel.CustomerName,
-                PONumber = salesOrderViewModel.PONumber
+                PONumber = salesOrderViewModel.PONumber,
+                ObjectState = salesOrderViewModel.ObjectState
             };
 
             //Used to set the ID to -1 for child records since entity framework ignores negatives
@@ -59,18 +61,19 @@ namespace SolutionName.Web.ViewModels
                     Quantity = salesOrderItemViewModel.Quantity,
                     UnitPrice = salesOrderItemViewModel.UnitPrice,
                     ObjectState = salesOrderItemViewModel.ObjectState,
-                    SalesOrderId = salesOrderItemViewModel.SalesOrderId
                 };
 
                 if (salesOrderItemViewModel.ObjectState != ObjectState.Added)
                 {
-                    salesOrderItem.SalesOrderId = salesOrderItemViewModel.SalesOrderId;
+                    salesOrderItem.SalesOrderItemId = salesOrderItemViewModel.SalesOrderItemId;
                 }
                 else
                 {
-                    salesOrderItem.SalesOrderId = temporarySalesOrderItemId;
+                    salesOrderItem.SalesOrderItemId = temporarySalesOrderItemId;
                     temporarySalesOrderItemId--;
                 }
+
+                salesOrderItem.SalesOrderId = salesOrderViewModel.SalesOrderId;
 
                 salesOrder.SalesOrderItems.Add(salesOrderItem);
             }

@@ -2,7 +2,7 @@
 @*this will bind the paragraphs tags text attribute to the viewmodels MessageToClient Property*@
 <p data-bind="text: MessageToClient"></p>
 
-<div>
+<form>
     <div class="form-group">
         <label for="CustomerName" class="control-label">Customer Name:</label>
         @*event: {change: flagSalesOrderAsEdited} binds it to the function in JS script file*@
@@ -12,39 +12,44 @@
         <label for="PONumber" class="control-label">P.O. Number</label>
         <input name="PONumber" id="PONumber" class="form-control" data-bind="value: PONumber, event: {change: flagSalesOrderAsEdited}" />
     </div>
-</div>
 
-<table class="table table-striped">
-    <tr>
-        <th>Product Code</th>
-        <th class="text-right">Quantity</th>
-        <th class="text-right">Unit Price</th>
-        <th class="text-right">Extended</th>
-        <th><button data-bind="click: addSalesOrderItem" class="btn btn-info btn-xs">Add</button></th>
-    </tr>
-    @*databind to SalesOrderItem of Model*@
-    <tbody data-bind="foreach: SalesOrderItems">
-    <tr>
-        @*
-                data-bind to each property in SaleOrderItem object
-            *@
-        <td class="form-group"><input class="form-control input-sm" data-bind="value: ProductCode, event: {change: flagSalesOrderItemAsEdited}, hasfocus: true" /></td>
-        <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: Quantity, event: {change: flagSalesOrderItemAsEdited}" /></td>
-        <td class="form-group"><input class="form-control input-sm text-right" data-bind="value: UnitPrice, event: {change: flagSalesOrderItemAsEdited}" /></td>
-        <td class="form-group"><span class="form-control text-right" data-bind="text: ExtendedPrice"></span></td>
-        <td class="form-group"><button class="btn btn-danger btn-xs" data-bind="click: $parent.deleteSalesOrderItem">Delete</button></td>
-    </tr>
-    </tbody>
-    <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td class="form-group"><span class="form-control text-right">Total</span></td>
-        <td class="form-group"><span class="form-control text-right" data-bind="text: Total"></span></td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
-<p><button data-bind="click: save" class="btn btn-primary">Save</button></p>
-<p>
 
-    <a href="/" class="btn btn-default btn-sm">&laquo; Back to list</a>
-</p>
+    <table class="table table-striped">
+        <tr>
+            <th>Product Code</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Unit Price</th>
+            <th class="text-right">Extended</th>
+            <th><button data-bind="click: addSalesOrderItem" class="btn btn-info btn-xs">Add</button></th>
+        </tr>
+        @*databind to SalesOrderItem of Model*@
+        <tbody data-bind="foreach: SalesOrderItems">
+            <tr>
+                @*
+                    data-bind to each property in SaleOrderItem object
+                    
+                    When doing child validation using jQuery validate you need to add a unique attribute 
+                    for jQuery validate to use so in the data-bind add the following
+                    attr: {'id': 'ProductCode_' + $index()},
+                *@
+                <td class="form-group"><input name="ProductCode" class="form-control input-sm" data-bind="attr: {'id': 'ProductCode_' + $index()}, value: ProductCode, event: {change: flagSalesOrderItemAsEdited}, hasfocus: true" /></td>
+                <td class="form-group"><input name="Quantity" class="form-control input-sm text-right" data-bind="attr: {'id': 'Quantity_' + $index()},value: Quantity, event: {change: flagSalesOrderItemAsEdited}" /></td>
+                <td class="form-group"><input name="UnitPrice" class="form-control input-sm text-right" data-bind="attr: {'id': 'UnitPrice_' + $index()},value: UnitPrice, event: {change: flagSalesOrderItemAsEdited}" /></td>
+                <td class="form-group"><span class="form-control text-right" data-bind="text: ExtendedPrice"></span></td>
+                <td class="form-group"><button class="btn btn-danger btn-xs" data-bind="click: $parent.deleteSalesOrderItem">Delete</button></td>
+            </tr>
+        </tbody>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td class="form-group"><span class="form-control text-right">Total</span></td>
+            <td class="form-group"><span class="form-control text-right" data-bind="text: Total"></span></td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    <p><button type="submit" class="btn btn-primary">Save</button></p>
+    <p>
+
+        <a href="/" class="btn btn-default btn-sm">&laquo; Back to list</a>
+    </p>
+</form>
